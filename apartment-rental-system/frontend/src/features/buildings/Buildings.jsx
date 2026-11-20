@@ -1,0 +1,4 @@
+import {List,FormModal,ModalBtn} from '../../components';
+import {PhilippineAddressDisplay} from '../../components/PhilippineAddressFields.jsx';
+export default function Buildings({role}){return <List route="buildings" cols={ [['Building','building_name'],['Address','complete_address',value=><PhilippineAddressDisplay address={value}/>],...(role==='Admin'?[['Landlord','landlord']]:[]),['Units','units'],['Status','status']]}
+ bar={load=>role==='Landlord'&&<ModalBtn label="+ Add Building">{close=><FormModal title="Register Building" route="buildings/create" onDone={load} onClose={close} submit="Save Building" fields={[{k:'building_name',l:'Building Name'},{k:'address',l:'Property Address',type:'philippine-address',full:true},{k:'postal_code',l:'Postal Code',opt:true},{k:'description',l:'Description',type:'textarea',opt:true}]}/>}</ModalBtn>}/>}

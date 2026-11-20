@@ -1,0 +1,4 @@
+import {List,FormModal,ModalBtn} from '../../components';
+// Admin accounts can ONLY be created here, by an existing admin.
+export default function Users(){return <List route="admin/users" cols={[['ID','user_id'],['Username','username'],['Name','name'],['Email','email'],['Role','role'],['Status','account_status'],['Last Login','last_login_at']]}
+ bar={load=><ModalBtn label="+ Create Admin Account">{close=><FormModal title="Create Admin Account" sub="Only admins can create admin accounts" route="admin/users/create" submit="Create Admin" onDone={load} onClose={close} fields={[{k:'first_name',l:'First Name'},{k:'last_name',l:'Last Name'},{k:'username',l:'Username'},{k:'email',l:'Gmail Address',type:'email'},{k:'phone',l:'Mobile Number',type:'phone'},{k:'pw',l:'Password',type:'password',min:8}]}/>}</ModalBtn>}/>}

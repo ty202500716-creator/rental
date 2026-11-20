@@ -1,0 +1,21 @@
+Philippine Standard Geographic Code (PSGC) reference data
+
+Source: https://psgc.gitlab.io/api/
+Collections: regions, provinces, cities-municipalities, barangays
+
+The checked-in JSON files are the runtime source of truth. The application does
+not make live PSGC requests, so registrations and saved addresses continue to
+work when the upstream service is unavailable.
+
+To refresh the snapshot, run `node backend/data/psgc/refresh.mjs` from the
+repository root. The script downloads all four source collections, verifies
+their codes and parent relationships, then replaces the local files. Review
+the resulting changes and run `node backend/data/psgc/refresh.mjs --check`
+before deploying. `--check` validates the local snapshot without network
+access.
+
+NCR has no province records in PSGC. Regions that contain province-less
+special cities expose a separate "No province (special cities)" branch in the
+Province combobox. These choices are UI-only: the submitted address is
+validated against the region and city and the stored province code remains
+NULL. No synthetic province code is stored.

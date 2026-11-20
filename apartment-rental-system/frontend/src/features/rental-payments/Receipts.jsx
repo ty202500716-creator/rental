@@ -1,0 +1,3 @@
+import {List,ModalBtn,Print,money,php} from '../../components';
+export default function Receipts(){return <List route="receipts" empty="Receipts appear after the landlord confirms a payment." cols={[['Receipt No.','receipt_number'],['Category','category'],['Unit','unit'],['Amount','amount',money],['Method','method'],['Issued','issued_at']]}
+ actions={r=><ModalBtn label="View / Print" cls="out">{close=><Print title="Payment Receipt" close={close} rows={[['Receipt No.',r.receipt_number],['Category',r.category],['Unit',r.unit],['Amount Received',php(r.amount)],['Method',r.method],['Date Issued',r.issued_at]]}/>}</ModalBtn>}/>}

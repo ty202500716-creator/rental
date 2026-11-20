@@ -1,0 +1,13 @@
+import {useApi} from '../hooks/useApi.js';
+import {FormModal} from './FormModal.jsx';
+import {ModalBtn} from './Modal.jsx';
+import {KV,Tag} from './Display.jsx';
+import {PhilippineAddressDisplay} from './PhilippineAddressFields.jsx';
+export default function Profile({pw=true}){const{d,e,load}=useApi('profile');if(e)return <div className="err">{e}</div>;if(!d)return <div className="mut">Loading…</div>;const p=d.profile;const strip=v=>(v||'').replace('+63','');
+  const fields=[{k:'first_name',l:'First Name'},{k:'middle_name',l:'Middle Name',opt:true},{k:'last_name',l:'Last Name'},{k:'phone',l:'Mobile Number',type:'phone'},
+    ...(p.role!=='Admin'?[{k:'address',l:'Complete Address',type:'philippine-address',full:true,legacyAddress:p.complete_address},{k:'occupation',l:'Occupation',opt:p.role==='Landlord'}]:[]),
+    ...(p.role==='Tenant'?[{k:'ec_name',l:'Emergency Contact Name'},{k:'ec_phone',l:'Emergency Contact Number',type:'phone'}]:[])];
+  const init={...p,phone:strip(p.contact_number),address:p.role==='Tenant'||p.role==='Landlord'?{region_code:p.region_code||'',province_code:p.province_code||'',city_municipality_code:p.city_municipality_code||'',barangay_code:p.barangay_code||'',street_address:p.street_address||''}:p.complete_address,ec_name:p.emergency_contact_name,ec_phone:strip(p.emergency_contact_number)};
+  return <><KV rows={ [['User ID',p.user_id],['Username',p.username],['Name',`${p.first_name} ${p.middle_name||''} ${p.last_name}`],['Email',p.email],['Contact',p.contact_number],...(p.role!=='Admin'?[['Address',<PhilippineAddressDisplay address={p.complete_address}/>],['Occupation',p.occupation],['ID',p.id_type?`${p.id_type} – ${p.id_number}`:null],['Verification',p.verification_status&&<Tag s={p.verification_status}/>]]:[]),...(p.role==='Tenant'?[['Emergency contact',p.emergency_contact_name?`${p.emergency_contact_name} (${p.emergency_contact_number})`:null]]:[]),['Account status',<Tag s={p.account_status}/>],...(p.account_status_reason?[['Account status reason',p.account_status_reason]]:[]) ]}/>
+    <div className="bar" style={{marginTop:14}}><ModalBtn label="Edit Information">{close=><FormModal title="Edit Information" fields={fields} init={init} route={"profile"} onDone={load} onClose={close} submit="Save"/>}</ModalBtn>
+    {pw&&<ModalBtn label="Change Password" cls="out">{close=><FormModal title="Change Password" route={"password"} onClose={close} submit="Update Password" fields={[{k:'current',l:'Current Password',type:'password',full:true},{k:'new',l:'New Password',type:'password',min:8,full:true},{k:'cp',l:'Confirm New Password',type:'password',same:'new',skip:true,full:true}]}/>}</ModalBtn>}</div></>}

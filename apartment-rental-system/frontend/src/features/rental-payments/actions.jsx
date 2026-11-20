@@ -1,0 +1,7 @@
+import {FormModal,ModalBtn,php} from '../../components';
+// Landlord: record a cash payment for one bill
+export const cashAction=(kind,r,load)=>r.balance>0&&<ModalBtn label="Record Cash" cls="out">{close=><FormModal title="Record Cash Payment" sub={`Balance ${php(r.balance)}`} route="payments/cash" extra={{kind,bill_id:r.id}} init={{amount:r.balance}} fields={[{k:'amount',l:'Amount Received (₱)',type:'number',full:true}]} submit="Record & Issue Receipt" onDone={load} onClose={close}/>}</ModalBtn>;
+// Tenant: pay ONE bill (electricity and water are never combined into one payment)
+export const payAction=kind=>(r,load)=>r.bal>0&&(r.pending?<span className="tag y">Awaiting verification</span>:<ModalBtn label={`Pay ${r.type}`}>{close=><FormModal title={`Pay ${r.type} Bill`} sub={`Balance ${php(r.bal)} · due ${r.due}`} route="payments/create" extra={{kind,bill_id:r.id}} init={{amount:r.bal}} onDone={load} onClose={close} submit="Submit Payment"
+ note={`This pays the ${r.type} bill only. Partial payments are allowed. GCash and bank payments need a reference number and proof.`}
+ fields={[{k:'amount',l:'Amount (₱)',type:'number',min:0.01},{k:'method',l:'Payment Method',type:'select',opts:['GCash','Bank Transfer','Cash']},{k:'reference',l:'Reference Number (GCash / bank)',opt:true,requiredIf:{field:'method',values:['GCash','Bank Transfer']}},{k:'proof',l:'Upload Proof',type:'file',opt:true}]}/>}</ModalBtn>);

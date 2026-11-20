@@ -1,0 +1,6 @@
+import {List,FormModal,ModalBtn,Do,doc,money} from '../../components';
+import {api} from '../../services/api.js';
+// Payment submissions. Landlord verifies/rejects; Admin monitors; Tenant sees history.
+export default function Payments({role,cats,mobileCards=false}){const L=role==='Landlord';
+ return <List route="payments" filter={cats&&(r=>cats.includes(r.category))} empty="No payments yet." mobileCards={mobileCards} cols={[...(role==='Tenant'?[['Date','payment_date']]:[]),['Category','category'],...(role!=='Tenant'?[['Tenant','tenant']]:[]),['Amount','amount',money],['Method','method'],...(role!=='Admin'?[['Reference','reference']]:[]),...(L?[['Proof','proof_file',doc]]:[]),...(role!=='Tenant'?[['Date','payment_date']]:[]),['Status','status'],['Reason','rejection_reason'],...(L?[['Receipt','receipt_number']]:[])]}
+ actions={L?(r,load)=>r.status==='Pending'&&<><Do label="Verify" cls="ok" run={()=>api('payments/decide',{payment_id:r.payment_id,decision:'Verified'})} done={load}/><ModalBtn label="Reject" cls="bad">{close=><FormModal danger title="Reject Payment" sub={`${r.category} – ${r.tenant}`} route="payments/decide" extra={{payment_id:r.payment_id,decision:'Rejected'}} fields={[{k:'reason',l:'Reason (required)',type:'textarea'}]} submit="Confirm Rejection" onDone={load} onClose={close}/>}</ModalBtn></>:null}/>}

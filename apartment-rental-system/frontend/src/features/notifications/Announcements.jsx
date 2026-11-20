@@ -1,0 +1,3 @@
+import {List,FormModal,ModalBtn} from '../../components';
+export default function Announcements({role}){const post=role!=='Tenant';return <List route="announcements" empty="No announcements." cols={[['Title','title'],['Audience','audience'],['Message','content'],['Date','created_at']]}
+ bar={load=>post&&<ModalBtn label="+ New Announcement">{close=><FormModal title="New Announcement" route="announcements/create" onDone={load} onClose={close} submit="Publish" fields={[{k:'title',l:'Title',full:true},...(role==='Admin'?[{k:'audience',l:'Audience',type:'select',opts:['All','Landlords','Tenants']}]:[]),{k:'content',l:'Message',type:'textarea'}]}/>}</ModalBtn>}/>}
